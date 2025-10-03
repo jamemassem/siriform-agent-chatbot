@@ -8,7 +8,7 @@
 |------|----|----------------------------------------------------------------------------------------------------------------------------------------|
 | T001 |    | Initialize the monorepo using `pnpm workspaces` and create the `backend` and `frontend` directories.                                   |
 | T002 |    | In `backend/`, initialize a new Python project with Poetry and add FastAPI, Uvicorn, and LangGraph as dependencies.                     |
-| T003 |    | In `backend/app/schemas/`, manually create `equipment_form.json` by converting the structure from the original `.ts` format.            |
+| T003 |    | In `backend/app/schemas/`, manually create `equipment_form.json` by converting the structure from the original `legacy_equipment_form.ts` format.            |
 | T004 |    | In `backend/app/`, define Pydantic models for the API request (`AgentInvokeRequest`) and response (`AgentResponse`).                     |
 | T005 |    | Set up the `form_submissions` table in Supabase Postgres as defined in `data-model.md`.                                                |
 | T006 |    | Create a health check endpoint `/health` in `backend/app/main.py` to confirm the server is running.                                    |
