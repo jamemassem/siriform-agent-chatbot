@@ -1,0 +1,86 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "SiriForm Agent API",
+    "version": "1.0.0",
+    "description": "API for interacting with the SiriForm Agent."
+  },
+  "paths": {
+    "/agent/invoke": {
+      "post": {
+        "summary": "Invoke the Siri Agent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "session_id": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "form_schema": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response from the agent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AgentResponse": {
+        "type": "object",
+        "properties": {
+          "response_type": {
+            "type": "string",
+            "enum": [
+              "clarification",
+              "update",
+              "error"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "form_data": {
+            "type": "object"
+          },
+          "confidence_scores": {
+            "type": "object"
+          },
+          "missing_fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "error_details": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
