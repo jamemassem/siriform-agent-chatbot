@@ -1,0 +1,67 @@
+# ===================================================================
+# General Rules for IDEs & OS
+# ===================================================================
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*~
+
+# ===================================================================
+# Python / Backend (/backend directory)
+# ===================================================================
+/backend/__pycache__/
+/backend/*.pyc
+/backend/.venv/
+/backend/venv/
+/backend/.env
+/backend/.env.*
+!/backend/.env.example
+
+# ===================================================================
+# Node / Frontend (/frontend directory)
+# ===================================================================
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.env
+/frontend/.env.*
+!/frontend/.env.example
+/frontend/.eslintcache
+/frontend/.vite/
+/frontend/vite.config.js.timestamp-*
+/frontend/vite.config.ts.timestamp-*
+
+# ===================================================================
+# General Log & Package Files (from original file)
+# ===================================================================
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Diagnostic reports
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Output of 'npm pack'
+*.tgz
+
+# Serverless directories
+.serverless/
+
+# Yarn v3
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
