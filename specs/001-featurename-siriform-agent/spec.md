@@ -16,9 +16,12 @@ As a general staff member, I want to request computer equipment by having a natu
 4.  **Given** the AI assistant is unavailable, **When** the user opens the application, **Then** a message is displayed indicating the assistant is offline, and the user can still fill out and submit the form manually.
 
 ### Edge Cases
--   What happens when the user provides conflicting information in the same sentence (e.g., "I need 1 laptop, no, 2 laptops")?
--   How does the system handle requests for equipment not listed in the form's options?
--   What is the behavior if the user's requested date/time is in the past?
+-   **What happens when the user provides conflicting information?**
+    > The agent will prioritize the most recent information provided in the sentence (e.g., in "I need 1, no, 2 laptops," it will use "2"). It may then ask for confirmation: "Just to confirm, you need 2 laptops, is that correct?".
+-   **How does the system handle requests for equipment not on the list?**
+    > Siri will inform the user that the requested item is not standard and ask for confirmation before proceeding, logging it as a custom request.
+-   **What is the behavior if the user's requested date/time is in the past?**
+    > Siri will detect that the date is in the past and politely ask the user for a future date: "It looks like that date has already passed. Could you please provide a future date for the request?".
 
 ## Requirements
 

@@ -66,6 +66,9 @@ specs/001-featurename-siriform-agent/
 
 **Structure Decision**: A Monorepo managed by `pnpm workspaces` is chosen to facilitate development and ensure clear separation between the frontend and backend applications, aligning with Principle 5.
 
+## Form Schema Management
+**Form Schema Management:** The structure of the primary Computer Equipment Request Form will be created by **manually converting the original `.ts` format from `/source_files/legacy_equipment_form.ts`** into an `equipment_form.json` schema file by hand. This file will reside in a `/backend/app/schemas` directory.
+
 ## Phase 0: Outline & Research
 1.  **Extract unknowns from Technical Context**: All major technical decisions have been made in the provided plan. No further research is required.
 2.  **Consolidate findings** in `research.md`: Document the chosen technology stack and architecture.
