@@ -1,50 +1,90 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report:
+- Version change: None -> 1.0.0
+- Added sections: Preamble, Principles, Governance
+- Removed sections: None
+- Templates requiring updates:
+  - ✅ .specify/templates/plan-template.md
+  - ✅ .specify/templates/spec-template.md
+  - ✅ .specify/templates/tasks-template.md
+  - ✅ .specify/templates/commands/constitution.md
+- Follow-up TODOs: None
+-->
 
-## Core Principles
+# Constitution of the Siriform Agent Chatbot
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+**Version**: 1.0.0
+**Ratification Date**: 2025-10-06
+**Last Amended Date**: 2025-10-06
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+## Preamble
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+These are the governing principles for the "Siriform Agent Chatbot" project. All development, design, and testing activities must adhere to these standards to ensure the creation of a world-class, intelligent assistant.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+## Principles
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### Principle 1: Persona-Driven, Flawless User Experience
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+The core of this project is an interaction with "Siri," a helpful and highly competent female IT staff member. Every decision must prioritize a seamless, intuitive, and consistent user experience that is always aligned with this persona.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+*   **Mandates:**
+    *   **Persona Consistency:** All AI-generated language must reflect the helpful, polite, and efficient persona of a female Thai IT professional.
+    *   **Interaction Cohesion:** The agent's conversational actions and the system's state changes must be seamlessly integrated.
+    *   **Clarity and Feedback:** The user must always have clear, immediate, and intuitive feedback on the agent's actions.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### Principle 2: Radical Engineering Excellence and Code Quality
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+We write software that is not merely functional, but is demonstrably clean, efficient, and supremely maintainable. Our code is a professional asset; its quality is a direct reflection of our engineering discipline.
+
+*   **Mandates:**
+    *   **Meaningful Names:** All identifiers must clearly describe their purpose.
+    *   **DRY (Don't Repeat Yourself):** Logic must never be duplicated.
+    *   **KISS (Keep It Simple, Stupid):** The simplest solution is the preferred solution.
+    *   **Single Responsibility Principle (SRP):** Every component must have one primary responsibility.
+    *   **YAGNI (You Ain't Gonna Need It):** We will not implement features on the assumption they "might be needed in the future."
+    *   **Zero Hard-Coding and High Configurability:** There is a zero-tolerance policy for hard-coded values.
+    *   **Purposeful Commenting:** Comments will explain the "why," not the "what."
+    *   **Consistent Formatting:** The entire codebase will be automatically formatted.
+
+### Principle 3: Performance as a Core Feature
+
+Application speed is a critical feature. The system must feel responsive and fluid at all times.
+
+*   **Mandates:**
+    *   **UI Responsiveness:** The frontend must be optimized for fast loads and interactions.
+    *   **Low-Latency Agent:** The AI agent must respond with minimal latency.
+    *   **Efficient State Management:** Application state will be managed efficiently.
+
+### Principle 4: Measurable and Verifiable Quality
+
+Quality is not assumed; it is verified through rigorous, repeatable, and efficient testing. The agent's behavior must be observable and its performance measurable.
+
+*   **Mandates:**
+    *   **Verifiable Agent Behavior:** The agent's logic must be testable through a standardized evaluation framework.
+    *   **Full Observability:** The internal workings of the agent must be fully traceable.
+    *   **Data-Driven Improvement:** Agent quality will be measured against defined success metrics to guide improvement.
+
+### Principle 5: Clear Contracts and Boundaries
+
+In our Monorepo architecture, the Frontend and Backend are distinct applications. They communicate exclusively through well-defined API contracts, ensuring each can evolve independently.
+
+*   **Mandates:**
+    *   **API-First Design:** All communication between Frontend and Backend MUST occur through a formally defined API.
+    *   **Backend as the Source of Truth:** The Backend (Python) is the single source of truth for all business logic and data models.
+    *   **Clear Separation of Responsibilities:** The Backend handles all business logic; the Frontend's primary responsibility is presentation.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+### Development Workflow
+All development must follow the explicit, sequential workflow of the `spec-kit` methodology (`/constitution` -> `/specify` -> `/clarify` -> `/plan` -> `/tasks` -> `/analyze` -> `/implement`).
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+*   **Strict Sequential Execution:** The AI Agent MUST complete one command and wait for the next explicit command from the user before proceeding. It is strictly forbidden to proactively execute the next command in the sequence (e.g., automatically running `/plan` after `/specify` is complete). Each step requires human review and a direct instruction to continue.
+
+### Versioning
+This constitution follows semantic versioning (vX.Y.Z):
+*   **MAJOR**: Backward-incompatible changes (e.g., removing a principle).
+*   **MINOR**: Backward-compatible additions (e.g., adding a new principle).
+*   **PATCH**: Clarifications, typo fixes, and non-semantic updates.
+
+### Compliance
+All project artifacts, including code, specifications, and plans, must be reviewed for compliance with this constitution before being finalized.
