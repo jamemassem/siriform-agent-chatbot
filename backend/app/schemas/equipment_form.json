@@ -1,0 +1,211 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Computer Equipment Request Form",
+  "description": "Form for requesting computer equipment borrowing",
+  "properties": {
+    "employeeId": {
+      "type": "string",
+      "title": "รหัสพนักงาน",
+      "description": "Employee ID"
+    },
+    "fullName": {
+      "type": "string",
+      "title": "ชื่อ-สกุล",
+      "description": "Full name"
+    },
+    "position": {
+      "type": "string",
+      "title": "ตำแหน่ง",
+      "description": "Position"
+    },
+    "department": {
+      "type": "string",
+      "title": "ภาควิชา/สถาน/ศูนย์ฝ่าย",
+      "description": "Department/Division/Center"
+    },
+    "division": {
+      "type": "string",
+      "title": "สาขา/งาน",
+      "description": "Branch/Section"
+    },
+    "unit": {
+      "type": "string",
+      "title": "หน่วย",
+      "description": "Unit"
+    },
+    "phoneNumber": {
+      "type": "string",
+      "title": "เบอร์โทรศัพท์",
+      "description": "Phone number",
+      "pattern": "^0[0-9]{9}$"
+    },
+    "email": {
+      "type": "string",
+      "title": "อีเมล",
+      "description": "Email address",
+      "format": "email"
+    },
+    "subject": {
+      "type": "string",
+      "title": "เรื่อง",
+      "description": "Subject"
+    },
+    "equipments": {
+      "type": "array",
+      "title": "รายการอุปกรณ์",
+      "description": "List of equipment to borrow",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "ประเภทอุปกรณ์",
+            "enum": [
+              "Notebook",
+              "Desktop Computer",
+              "Monitor",
+              "Projector",
+              "Printer",
+              "Scanner",
+              "Tablet",
+              "Webcam",
+              "Microphone",
+              "Speaker",
+              "Other"
+            ]
+          },
+          "quantity": {
+            "type": "integer",
+            "title": "จำนวน",
+            "minimum": 1,
+            "maximum": 50,
+            "default": 1
+          },
+          "detail": {
+            "type": "string",
+            "title": "รายละเอียด",
+            "description": "Equipment details (model/brand)"
+          }
+        },
+        "required": ["type", "quantity"]
+      }
+    },
+    "borrowingPurpose": {
+      "type": "string",
+      "title": "วัตถุประสงค์ในการยืม",
+      "description": "Purpose of borrowing"
+    },
+    "usageStartDate": {
+      "type": "string",
+      "title": "วันที่เริ่มใช้งาน",
+      "format": "date"
+    },
+    "usageStartTime": {
+      "type": "string",
+      "title": "เวลาเริ่มใช้งาน",
+      "format": "time"
+    },
+    "usageEndDate": {
+      "type": "string",
+      "title": "วันที่สิ้นสุดการใช้งาน",
+      "format": "date"
+    },
+    "usageEndTime": {
+      "type": "string",
+      "title": "เวลาสิ้นสุดการใช้งาน",
+      "format": "time"
+    },
+    "installationLocation": {
+      "type": "string",
+      "title": "สถานที่ที่ต้องการติดตั้ง",
+      "description": "Installation location"
+    },
+    "defaultSoftware": {
+      "type": "boolean",
+      "title": "ใช้ซอฟต์แวร์ต้นฉบับ",
+      "description": "Use default software",
+      "default": false
+    },
+    "additionalSoftwareNeeded": {
+      "type": "boolean",
+      "title": "ต้องการโปรแกรมเพิ่มเติม",
+      "description": "Need additional software",
+      "default": false
+    },
+    "additionalSoftwareDetail": {
+      "type": "string",
+      "title": "รายละเอียดโปรแกรมเพิ่มเติม",
+      "description": "Additional software details"
+    },
+    "coordinatorName": {
+      "type": "string",
+      "title": "ชื่อผู้ประสานงาน",
+      "description": "Coordinator name"
+    },
+    "coordinatorPhone": {
+      "type": "string",
+      "title": "เบอร์โทรผู้ประสานงาน",
+      "description": "Coordinator phone",
+      "pattern": "^0[0-9]{9}$"
+    },
+    "receiverName": {
+      "type": "string",
+      "title": "ผู้รับอุปกรณ์",
+      "description": "Receiver name"
+    },
+    "pickupDate": {
+      "type": "string",
+      "title": "วันที่รับอุปกรณ์",
+      "format": "date"
+    },
+    "pickupTime": {
+      "type": "string",
+      "title": "เวลารับอุปกรณ์",
+      "format": "time"
+    },
+    "remarks": {
+      "type": "string",
+      "title": "หมายเหตุ",
+      "description": "Remarks"
+    },
+    "attachedFiles": {
+      "type": "array",
+      "title": "ไฟล์แนบ",
+      "description": "Attached files",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "employeeId",
+    "fullName",
+    "position",
+    "department",
+    "phoneNumber",
+    "subject",
+    "equipments",
+    "borrowingPurpose",
+    "usageStartDate",
+    "usageStartTime",
+    "usageEndDate",
+    "usageEndTime",
+    "installationLocation",
+    "coordinatorName",
+    "coordinatorPhone",
+    "receiverName",
+    "pickupDate",
+    "pickupTime"
+  ]
+}

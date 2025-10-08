@@ -4,11 +4,11 @@
 
 | ID   | P? | Phase     | Task Description                                                                                             |
 |------|----|-----------|--------------------------------------------------------------------------------------------------------------|
-| T001 |    | Setup     | Initialize the Monorepo structure with `pnpm-workspace.yaml` and create `/frontend` and `/backend` directories. |
-| T002 |    | Setup     | In the `/backend` directory, initialize a Python project with `poetry` and add FastAPI, LangChain, and LangGraph. |
-| T003 |    | Setup     | In the `/frontend` directory, initialize a React + TypeScript project using Vite.                             |
-| T004 |    | Backend   | Create the `equipment_form.json` schema file in `/backend/app/schemas/` by manually converting the format from `/source_files/legacy_equipment_form.ts`. |
-| T005 | [P] | Backend   | Define Pydantic models in `/backend/app/models.py` for API request and response bodies.                      |
+| T001 | [X] | Setup     | Initialize the Monorepo structure with `pnpm-workspace.yaml` and create `/frontend` and `/backend` directories. |
+| T002 | [X] | Setup     | In the `/backend` directory, initialize a Python project with `poetry` and add FastAPI, LangChain, and LangGraph. |
+| T003 | [X] | Setup     | In the `/frontend` directory, initialize a React + TypeScript project using Vite.                             |
+| T004 | [X] | Backend   | Create the `equipment_form.json` schema file in `/backend/app/schemas/` by manually converting the format from `/source_files/legacy_equipment_form.ts`. |
+| T005 | [X] | Backend   | Define Pydantic models in `/backend/app/models.py` for API request and response bodies.                      |
 | T006 | [P] | Testing   | Write failing unit tests for the agent's tools.                                                              |
 | T007 | [P] | Backend   | Implement the `lookup_user_history` tool in `/backend/app/agent/tools/history.py`.                           |
 | T008 | [P] | Backend   | Implement the `analyze_user_request` tool in `/backend/app/agent/tools/analyzer.py`.                         |
