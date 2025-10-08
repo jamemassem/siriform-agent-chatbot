@@ -19,7 +19,7 @@
 | T013 | [X] | Testing   | Write failing contract tests for the API endpoints.                                                          |
 | T014 | [X] | Backend   | Create the FastAPI endpoints (`/api/v1/chat`, `/api/v1/form-schema/{form_name}`) in `/backend/app/main.py`.     |
 | T015 | [X] | Backend   | Implement the core `SiriAgent` logic in `/backend/app/agent/SiriAgent.py` using LangGraph to orchestrate the tools. |
-| T016 |    | Backend   | Configure LangSmith observability for the agent.                                                              |
+| T016 | [X] | Backend   | Configure LangSmith observability for the agent.                                                              |
 | T017 | [P] | Frontend  | Implement the `DynamicFormRenderer.tsx` component to render a form from a JSON schema.                        |
 | T018 | [P] | Frontend  | Implement the `ProgressBar.tsx` component with gradient fill and smooth animations.                           |
 | T019 | [P] | Frontend  | Implement the main two-column chat interface in `App.tsx`.                                                    |

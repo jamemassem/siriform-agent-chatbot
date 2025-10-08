@@ -14,6 +14,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.models import ChatRequest, ChatResponse, FormSchemaResponse, HealthResponse
 from app import __version__
+from app.config import configure_langsmith
+
+# Configure LangSmith observability on startup
+configure_langsmith()
 
 
 # Initialize FastAPI app
@@ -104,42 +108,53 @@ async def chat(request: ChatRequest):
     Returns:
         ChatResponse with agent's response, updated form_data, and metadata
     """
-    # TODO: Implement SiriAgent integration (T015)
-    # For now, return a stub response to pass contract tests
-    
-    # Extract basic information from the message
-    message = request.message.lower()
-    form_data = request.form_data.copy() if request.form_data else {}
-    highlighted_fields = []
-    
-    # Simple pattern matching for demonstration
-    if "laptop" in message or "notebook" in message:
-        if "equipments" not in form_data:
-            form_data["equipments"] = []
+    try:
+        # Import agent and clients
+        from app.agent.SiriAgent import SiriAgent
+        from app.llm import get_llm_client, get_supabase_client
         
-        # Extract quantity if mentioned
-        import re
-        qty_match = re.search(r'(\d+)', message)
-        quantity = int(qty_match.group(1)) if qty_match else 1
+        # Get form schema (default to equipment_form)
+        form_schema = load_form_schema("equipment_form")
         
-        form_data["equipments"].append({
-            "type": "Notebook",
-            "quantity": quantity,
-            "detail": ""
-        })
-        highlighted_fields.append("equipments")
-        response_text = f"เข้าใจแล้วครับ คุณต้องการ Notebook จำนวน {quantity} เครื่อง"
-        confidence = 0.9
-    else:
-        response_text = "ขอบคุณครับ คุณต้องการอุปกรณ์อะไรบ้างครับ?"
-        confidence = 0.5
-    
-    return ChatResponse(
-        response=response_text,
-        form_data=form_data,
-        highlighted_fields=highlighted_fields,
-        confidence=confidence
-    )
+        # Initialize clients
+        llm = get_llm_client()
+        
+        # Try to get Supabase client, fall back to None if not configured
+        try:
+            supabase = get_supabase_client()
+        except ValueError:
+            print("⚠ Supabase not configured - history lookup disabled")
+            supabase = None
+        
+        # Create SiriAgent instance
+        agent = SiriAgent(
+            llm=llm,
+            supabase_client=supabase,
+            form_schema=form_schema
+        )
+        
+        # Process the message
+        result = await agent.process_message(
+            user_message=request.message,
+            session_id=request.session_id,
+            current_form_data=request.form_data
+        )
+        
+        return ChatResponse(**result)
+        
+    except Exception as e:
+        # Log error and return fallback response
+        print(f"❌ Error processing chat: {e}")
+        import traceback
+        traceback.print_exc()
+        
+        # Return a simple fallback response
+        return ChatResponse(
+            response="ขออภัยครับ เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้งครับ",
+            form_data=request.form_data or {},
+            highlighted_fields=[],
+            confidence=0.0
+        )
 
 
 if __name__ == "__main__":

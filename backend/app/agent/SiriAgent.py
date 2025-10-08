@@ -13,6 +13,7 @@ import json
 
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, SystemMessage
 from langchain_core.language_models import BaseChatModel
+from langchain_core.tracers import LangChainTracer
 from langgraph.graph import StateGraph, END
 from langgraph.prebuilt import ToolExecutor, ToolInvocation
 

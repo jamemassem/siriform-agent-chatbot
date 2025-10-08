@@ -2,15 +2,32 @@
 backend/__pycache__/
 backend/*.pyc
 backend/.env
+backend/.env.local
+backend/.env.*.local
 backend/venv/
 backend/.venv/
+backend/dist/
+backend/build/
+backend/.pytest_cache/
+backend/.mypy_cache/
+backend/.coverage
+backend/htmlcov/
+backend/*.egg-info/
 
 # Node / Frontend
 frontend/node_modules
 frontend/dist
 frontend/.env
-frontend/.env.*
+frontend/.env.local
+frontend/.env.*.local
 !frontend/.env.example
+
+# Environment files (CRITICAL - Never commit these!)
+.env
+.env.local
+.env.*.local
+*.env
+!*.env.example
 
 # IDE / OS specific
 .vscode/

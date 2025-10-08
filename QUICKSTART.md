@@ -35,12 +35,31 @@ cd backend
 # Install dependencies
 poetry install
 
-# Copy environment template
+# 🔐 IMPORTANT: Create .env from template
 cp .env.example .env
 
-# Edit .env with your API keys
+# ⚠️ CRITICAL: Edit .env with your REAL API keys
+# NEVER commit this file to git!
 notepad .env
 ```
+
+> **⚠️ Security Warning:** 
+> - `.env` file contains sensitive API keys
+> - Never commit `.env` to git (only `.env.example`)
+> - Verify with `git status` that `.env` is ignored
+> - See [SECURITY.md](SECURITY.md) for details
+
+### 2.5. Install Security Hooks (Recommended)
+
+```powershell
+# Install pre-commit hook to prevent accidentally committing secrets
+cp scripts/pre-commit .git/hooks/pre-commit
+
+# Test the hook
+python scripts/check-secrets.py
+```
+
+This will automatically check for secrets before each commit.
 
 ### 3. Frontend Setup
 
