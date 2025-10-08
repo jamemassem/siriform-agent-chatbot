@@ -9,16 +9,16 @@
 | T003 | [X] | Setup     | In the `/frontend` directory, initialize a React + TypeScript project using Vite.                             |
 | T004 | [X] | Backend   | Create the `equipment_form.json` schema file in `/backend/app/schemas/` by manually converting the format from `/source_files/legacy_equipment_form.ts`. |
 | T005 | [X] | Backend   | Define Pydantic models in `/backend/app/models.py` for API request and response bodies.                      |
-| T006 | [P] | Testing   | Write failing unit tests for the agent's tools.                                                              |
-| T007 | [P] | Backend   | Implement the `lookup_user_history` tool in `/backend/app/agent/tools/history.py`.                           |
-| T008 | [P] | Backend   | Implement the `analyze_user_request` tool in `/backend/app/agent/tools/analyzer.py`.                         |
-| T009 | [P] | Backend   | Implement the `lookup_information` tool for fuzzy matching in `/backend/app/agent/tools/lookup.py`.            |
-| T010 | [P] | Backend   | Implement the `update_form_data` tool in `/backend/app/agent/tools/form_writer.py`.                          |
-| T011 | [P] | Backend   | Implement the `validate_field` tool in `/backend/app/agent/tools/validator.py`.                              |
-| T012 | [P] | Backend   | Implement the `ask_clarifying_question` tool in `/backend/app/agent/tools/question_asker.py`.                |
-| T013 |    | Testing   | Write failing contract tests for the API endpoints.                                                          |
-| T014 |    | Backend   | Create the FastAPI endpoints (`/api/v1/chat`, `/api/v1/form-schema/{form_name}`) in `/backend/app/main.py`.     |
-| T015 |    | Backend   | Implement the core `SiriAgent` logic in `/backend/app/agent/SiriAgent.py` using LangGraph to orchestrate the tools. |
+| T006 | [X] | Testing   | Write failing unit tests for the agent's tools.                                                              |
+| T007 | [X] | Backend   | Implement the `lookup_user_history` tool in `/backend/app/agent/tools/history.py`.                           |
+| T008 | [X] | Backend   | Implement the `analyze_user_request` tool in `/backend/app/agent/tools/analyzer.py`.                         |
+| T009 | [X] | Backend   | Implement the `lookup_information` tool for fuzzy matching in `/backend/app/agent/tools/lookup.py`.            |
+| T010 | [X] | Backend   | Implement the `update_form_data` tool in `/backend/app/agent/tools/form_writer.py`.                          |
+| T011 | [X] | Backend   | Implement the `validate_field` tool in `/backend/app/agent/tools/validator.py`.                              |
+| T012 | [X] | Backend   | Implement the `ask_clarifying_question` tool in `/backend/app/agent/tools/question_asker.py`.                |
+| T013 | [X] | Testing   | Write failing contract tests for the API endpoints.                                                          |
+| T014 | [X] | Backend   | Create the FastAPI endpoints (`/api/v1/chat`, `/api/v1/form-schema/{form_name}`) in `/backend/app/main.py`.     |
+| T015 | [X] | Backend   | Implement the core `SiriAgent` logic in `/backend/app/agent/SiriAgent.py` using LangGraph to orchestrate the tools. |
 | T016 |    | Backend   | Configure LangSmith observability for the agent.                                                              |
 | T017 | [P] | Frontend  | Implement the `DynamicFormRenderer.tsx` component to render a form from a JSON schema.                        |
 | T018 | [P] | Frontend  | Implement the `ProgressBar.tsx` component with gradient fill and smooth animations.                           |
