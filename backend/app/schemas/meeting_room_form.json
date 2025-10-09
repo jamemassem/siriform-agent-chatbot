@@ -1,0 +1,203 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Meeting Room Booking Form",
+  "description": "แบบฟอร์มจองห้องประชุม",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "requester_name",
+    "department",
+    "room_type",
+    "booking_date",
+    "start_time",
+    "end_time",
+    "purpose"
+  ],
+  "properties": {
+    "requester_name": {
+      "type": "string",
+      "title": "ชื่อผู้จอง",
+      "description": "ชื่อ-นามสกุลของผู้จองห้องประชุม",
+      "minLength": 2,
+      "maxLength": 100,
+      "examples": ["สมชาย ใจดี", "John Smith"]
+    },
+    "department": {
+      "type": "string",
+      "title": "แผนก/ฝ่าย",
+      "description": "แผนกหรือฝ่ายที่สังกัด",
+      "enum": [
+        "HR",
+        "IT",
+        "Finance",
+        "Marketing",
+        "Sales",
+        "Operations",
+        "Management",
+        "Other"
+      ],
+      "enumLabels": {
+        "HR": "ทรัพยากรบุคคล",
+        "IT": "เทคโนโลยีสารสนเทศ",
+        "Finance": "การเงิน",
+        "Marketing": "การตลาด",
+        "Sales": "ฝ่ายขาย",
+        "Operations": "ปฏิบัติการ",
+        "Management": "ฝ่ายบริหาร",
+        "Other": "อื่นๆ"
+      }
+    },
+    "room_type": {
+      "type": "string",
+      "title": "ประเภทห้องประชุม",
+      "description": "ขนาดและประเภทของห้องที่ต้องการจอง",
+      "enum": [
+        "small",
+        "medium",
+        "large",
+        "boardroom",
+        "training"
+      ],
+      "enumLabels": {
+        "small": "ห้องเล็ก (4-6 ที่นั่ง)",
+        "medium": "ห้องกลาง (8-12 ที่นั่ง)",
+        "large": "ห้องใหญ่ (15-20 ที่นั่ง)",
+        "boardroom": "ห้องบอร์ด (20+ ที่นั่ง)",
+        "training": "ห้องอบรม (30+ ที่นั่ง)"
+      }
+    },
+    "booking_date": {
+      "type": "string",
+      "format": "date",
+      "title": "วันที่จอง",
+      "description": "วันที่ต้องการใช้ห้องประชุม"
+    },
+    "start_time": {
+      "type": "string",
+      "format": "time",
+      "title": "เวลาเริ่มต้น",
+      "description": "เวลาที่เริ่มใช้ห้อง (เช่น 09:00)"
+    },
+    "end_time": {
+      "type": "string",
+      "format": "time",
+      "title": "เวลาสิ้นสุด",
+      "description": "เวลาที่สิ้นสุดการใช้ห้อง (เช่น 11:00)"
+    },
+    "attendees_count": {
+      "type": "integer",
+      "title": "จำนวนผู้เข้าร่วม",
+      "description": "จำนวนคนที่จะเข้าประชุม",
+      "minimum": 1,
+      "maximum": 100,
+      "default": 5
+    },
+    "purpose": {
+      "type": "string",
+      "title": "วัตถุประสงค์",
+      "description": "วัตถุประสงค์ในการใช้ห้องประชุม",
+      "minLength": 10,
+      "maxLength": 500,
+      "examples": [
+        "ประชุมทีม IT รายสัปดาห์",
+        "อบรมพนักงานใหม่",
+        "นำเสนอโครงการให้ลูกค้า"
+      ]
+    },
+    "equipment_needed": {
+      "type": "array",
+      "title": "อุปกรณ์ที่ต้องการ",
+      "description": "เลือกอุปกรณ์เสริมที่ต้องการใช้",
+      "items": {
+        "type": "string",
+        "enum": [
+          "projector",
+          "whiteboard",
+          "video_conference",
+          "microphone",
+          "laptop",
+          "wifi",
+          "catering"
+        ]
+      },
+      "enumLabels": {
+        "projector": "โปรเจคเตอร์",
+        "whiteboard": "กระดานไวท์บอร์ด",
+        "video_conference": "ระบบ Video Conference",
+        "microphone": "ไมโครโฟน",
+        "laptop": "คอมพิวเตอร์ Notebook",
+        "wifi": "Wi-Fi",
+        "catering": "อาหารและเครื่องดื่ม"
+      },
+      "uniqueItems": true
+    },
+    "special_requirements": {
+      "type": "string",
+      "title": "ความต้องการพิเศษ",
+      "description": "ข้อกำหนดหรือความต้องการพิเศษอื่นๆ (ถ้ามี)",
+      "maxLength": 500
+    },
+    "contact_phone": {
+      "type": "string",
+      "title": "เบอร์ติดต่อ",
+      "description": "เบอร์โทรศัพท์สำหรับติดต่อ",
+      "pattern": "^[0-9]{9,10}$",
+      "examples": ["0812345678", "021234567"]
+    },
+    "contact_email": {
+      "type": "string",
+      "format": "email",
+      "title": "อีเมล",
+      "description": "อีเมลสำหรับยืนยันการจอง",
+      "examples": ["user@example.com"]
+    },
+    "is_recurring": {
+      "type": "boolean",
+      "title": "จองแบบประจำ",
+      "description": "ต้องการจองห้องแบบประจำหรือไม่",
+      "default": false
+    },
+    "recurring_pattern": {
+      "type": "string",
+      "title": "รูปแบบการจองประจำ",
+      "description": "เลือกความถี่ในการจองประจำ",
+      "enum": ["daily", "weekly", "biweekly", "monthly"],
+      "enumLabels": {
+        "daily": "ทุกวัน",
+        "weekly": "ทุกสัปดาห์",
+        "biweekly": "ทุก 2 สัปดาห์",
+        "monthly": "ทุกเดือน"
+      }
+    },
+    "notes": {
+      "type": "string",
+      "title": "หมายเหตุเพิ่มเติม",
+      "description": "ข้อมูลเพิ่มเติมหรือข้อสังเกตุอื่นๆ",
+      "maxLength": 1000
+    }
+  },
+  "dependencies": {
+    "is_recurring": {
+      "oneOf": [
+        {
+          "properties": {
+            "is_recurring": {
+              "const": false
+            }
+          }
+        },
+        {
+          "properties": {
+            "is_recurring": {
+              "const": true
+            },
+            "recurring_pattern": {
+              "type": "string"
+            }
+          },
+          "required": ["recurring_pattern"]
+        }
+      ]
+    }
+  }
+}

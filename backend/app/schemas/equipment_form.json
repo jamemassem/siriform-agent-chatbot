@@ -3,6 +3,7 @@
   "type": "object",
   "title": "Computer Equipment Request Form",
   "description": "Form for requesting computer equipment borrowing",
+  "version": "1.0.0",
   "properties": {
     "employeeId": {
       "type": "string",

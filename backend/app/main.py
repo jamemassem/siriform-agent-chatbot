@@ -99,8 +99,9 @@ async def chat(request: ChatRequest):
     This endpoint:
     1. Receives user message and current form state
     2. Uses the SiriAgent to process the message
-    3. Returns updated form data and highlighted fields
-    4. Maintains conversation context via session_id
+    3. Saves chat history and form submissions to Supabase
+    4. Returns updated form data and highlighted fields
+    5. Maintains conversation context via session_id
     
     Args:
         request: ChatRequest containing message, session_id, and form_data
@@ -112,6 +113,7 @@ async def chat(request: ChatRequest):
         # Import agent and clients
         from app.agent.SiriAgent import SiriAgent
         from app.llm import get_llm_client, get_supabase_client
+        from app.services import SupabaseService
         
         # Get form schema (default to equipment_form)
         form_schema = load_form_schema("equipment_form")
@@ -120,11 +122,21 @@ async def chat(request: ChatRequest):
         llm = get_llm_client()
         
         # Try to get Supabase client, fall back to None if not configured
+        supabase = None
+        supabase_service = None
         try:
             supabase = get_supabase_client()
+            supabase_service = SupabaseService(supabase)
         except ValueError:
-            print("⚠ Supabase not configured - history lookup disabled")
-            supabase = None
+            print("⚠ Supabase not configured - history and persistence disabled")
+        
+        # Save user message to chat history
+        if supabase_service:
+            supabase_service.save_message(
+                session_id=request.session_id,
+                role="user",
+                content=request.message
+            )
         
         # Create SiriAgent instance
         agent = SiriAgent(
@@ -139,6 +151,29 @@ async def chat(request: ChatRequest):
             session_id=request.session_id,
             current_form_data=request.form_data
         )
+        
+        # Save assistant response to chat history
+        if supabase_service:
+            supabase_service.save_message(
+                session_id=request.session_id,
+                role="assistant",
+                content=result["response"],
+                confidence=result.get("confidence"),
+                highlighted_fields=result.get("highlighted_fields")
+            )
+            
+            # Update or create form submission
+            submission = supabase_service.get_or_create_submission(
+                session_id=request.session_id,
+                form_type="equipment_form"
+            )
+            
+            if submission:
+                supabase_service.update_submission(
+                    submission_id=submission["id"],
+                    form_data=result["form_data"],
+                    confidence_score=result.get("confidence")
+                )
         
         return ChatResponse(**result)
         

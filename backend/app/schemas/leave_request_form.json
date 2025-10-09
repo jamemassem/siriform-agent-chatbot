@@ -1,0 +1,207 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Leave Request Form",
+  "description": "แบบฟอร์มขอลางาน",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "employee_name",
+    "employee_id",
+    "department",
+    "leave_type",
+    "start_date",
+    "end_date",
+    "reason"
+  ],
+  "properties": {
+    "employee_name": {
+      "type": "string",
+      "title": "ชื่อพนักงาน",
+      "description": "ชื่อ-นามสกุลของพนักงานผู้ขอลา",
+      "minLength": 2,
+      "maxLength": 100
+    },
+    "employee_id": {
+      "type": "string",
+      "title": "รหัสพนักงาน",
+      "description": "รหัสประจำตัวพนักงาน",
+      "pattern": "^[A-Z]{2}[0-9]{4,6}$",
+      "examples": ["IT001234", "HR000567"]
+    },
+    "department": {
+      "type": "string",
+      "title": "แผนก/ฝ่าย",
+      "enum": [
+        "HR",
+        "IT",
+        "Finance",
+        "Marketing",
+        "Sales",
+        "Operations",
+        "Management"
+      ],
+      "enumLabels": {
+        "HR": "ทรัพยากรบุคคล",
+        "IT": "เทคโนโลยีสารสนเทศ",
+        "Finance": "การเงิน",
+        "Marketing": "การตลาด",
+        "Sales": "ฝ่ายขาย",
+        "Operations": "ปฏิบัติการ",
+        "Management": "ฝ่ายบริหาร"
+      }
+    },
+    "leave_type": {
+      "type": "string",
+      "title": "ประเภทการลา",
+      "enum": [
+        "annual",
+        "sick",
+        "personal",
+        "maternity",
+        "paternity",
+        "unpaid",
+        "other"
+      ],
+      "enumLabels": {
+        "annual": "ลาพักร้อน",
+        "sick": "ลาป่วย",
+        "personal": "ลากิจ",
+        "maternity": "ลาคลอด",
+        "paternity": "ลาบิดา",
+        "unpaid": "ลาไม่รับเงินเดือน",
+        "other": "อื่นๆ"
+      }
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "title": "วันที่เริ่มลา",
+      "description": "วันแรกที่เริ่มลา"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date",
+      "title": "วันที่สิ้นสุด",
+      "description": "วันสุดท้ายของการลา"
+    },
+    "total_days": {
+      "type": "number",
+      "title": "จำนวนวันลา",
+      "description": "จำนวนวันทั้งหมดที่ขอลา",
+      "minimum": 0.5,
+      "maximum": 365,
+      "multipleOf": 0.5
+    },
+    "is_half_day": {
+      "type": "boolean",
+      "title": "ลาครึ่งวัน",
+      "description": "เป็นการลาครึ่งวันหรือไม่",
+      "default": false
+    },
+    "half_day_period": {
+      "type": "string",
+      "title": "ช่วงเวลา",
+      "description": "ช่วงครึ่งวันที่ต้องการลา",
+      "enum": ["morning", "afternoon"],
+      "enumLabels": {
+        "morning": "เช้า (08:00-12:00)",
+        "afternoon": "บ่าย (13:00-17:00)"
+      }
+    },
+    "reason": {
+      "type": "string",
+      "title": "เหตุผลการลา",
+      "description": "ระบุเหตุผลในการลา",
+      "minLength": 10,
+      "maxLength": 1000
+    },
+    "contact_phone": {
+      "type": "string",
+      "title": "เบอร์ติดต่อระหว่างลา",
+      "description": "เบอร์โทรที่สามารถติดต่อได้ระหว่างลา",
+      "pattern": "^[0-9]{9,10}$"
+    },
+    "contact_address": {
+      "type": "string",
+      "title": "ที่อยู่ระหว่างลา",
+      "description": "ที่อยู่ที่สามารถติดต่อได้",
+      "maxLength": 300
+    },
+    "substitute_person": {
+      "type": "string",
+      "title": "ผู้รับมอบหมายงาน",
+      "description": "ชื่อผู้ที่จะรับมอบหมายงานแทนระหว่างลา",
+      "maxLength": 100
+    },
+    "supervisor_name": {
+      "type": "string",
+      "title": "ชื่อผู้บังคับบัญชา",
+      "description": "ชื่อหัวหน้างานที่จะอนุมัติ",
+      "maxLength": 100
+    },
+    "medical_certificate": {
+      "type": "boolean",
+      "title": "มีใบรับรองแพทย์",
+      "description": "มีใบรับรองแพทย์แนบหรือไม่ (สำหรับลาป่วย)",
+      "default": false
+    },
+    "urgent": {
+      "type": "boolean",
+      "title": "เร่งด่วน",
+      "description": "เป็นกรณีเร่งด่วนหรือไม่",
+      "default": false
+    },
+    "notes": {
+      "type": "string",
+      "title": "หมายเหตุเพิ่มเติม",
+      "description": "ข้อมูลเพิ่มเติมที่ต้องการแจ้ง",
+      "maxLength": 500
+    }
+  },
+  "dependencies": {
+    "is_half_day": {
+      "oneOf": [
+        {
+          "properties": {
+            "is_half_day": {
+              "const": false
+            }
+          }
+        },
+        {
+          "properties": {
+            "is_half_day": {
+              "const": true
+            },
+            "half_day_period": {
+              "type": "string"
+            }
+          },
+          "required": ["half_day_period"]
+        }
+      ]
+    },
+    "leave_type": {
+      "oneOf": [
+        {
+          "properties": {
+            "leave_type": {
+              "enum": ["annual", "personal", "maternity", "paternity", "unpaid", "other"]
+            }
+          }
+        },
+        {
+          "properties": {
+            "leave_type": {
+              "const": "sick"
+            },
+            "medical_certificate": {
+              "type": "boolean"
+            }
+          },
+          "required": ["medical_certificate"]
+        }
+      ]
+    }
+  }
+}
