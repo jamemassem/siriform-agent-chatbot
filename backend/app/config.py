@@ -24,6 +24,11 @@ class Settings(BaseSettings):
     supabase_key: str = ""
     supabase_jwt_secret: str = ""
     
+    # JWT Authentication
+    JWT_SECRET_KEY: str = "your-secret-key-here-change-in-production"
+    JWT_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_HOURS: int = 24
+    
     # LangSmith (Observability)
     langsmith_api_key: Optional[str] = None
     langsmith_project: str = "siriform-agent"

@@ -8,11 +8,17 @@ import { ChatMessage as ChatMessageComponent } from './components/ChatMessage';
 import { ChatInput } from './components/ChatInput';
 import { DynamicFormRenderer } from './components/DynamicFormRenderer';
 import { ProgressBar } from './components/ProgressBar';
+import { AuthModal, UserMenu } from './components/Auth';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { sendChatMessage, getFormSchema, generateSessionId } from './services/api';
 import { calculateFormProgress } from './utils/formUtils';
 import './App.css';
 
-function App() {
+function AppContent() {
+  // Auth state
+  const { token, isAuthenticated } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  
   // State management
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [formData, setFormData] = useState<FormData>({});
@@ -68,12 +74,15 @@ function App() {
     setError(null);
 
     try {
-      // Send to backend
-      const response = await sendChatMessage({
-        message: content,
-        session_id: sessionId,
-        form_data: formData,
-      });
+      // Send to backend with auth token if available
+      const response = await sendChatMessage(
+        {
+          message: content,
+          session_id: sessionId,
+          form_data: formData,
+        },
+        token
+      );
 
       // Update form data
       setFormData(response.form_data);
@@ -125,6 +134,18 @@ function App() {
           <p className="app-subtitle">
             ระบบขอใช้อุปกรณ์คอมพิวเตอร์แบบสนทนา
           </p>
+        </div>
+        <div className="header-actions">
+          {isAuthenticated ? (
+            <UserMenu />
+          ) : (
+            <button 
+              className="login-button" 
+              onClick={() => setShowAuthModal(true)}
+            >
+              เข้าสู่ระบบ
+            </button>
+          )}
         </div>
         {error && (
           <div className="error-banner">
@@ -190,7 +211,23 @@ function App() {
           </div>
         </div>
       </div>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        initialMode="login"
+      />
     </div>
+  );
+}
+
+// Main App with AuthProvider
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

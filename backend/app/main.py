@@ -9,12 +9,15 @@ import os
 from pathlib import Path
 from typing import Dict, Any
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from typing import Optional
 
 from app.models import ChatRequest, ChatResponse, FormSchemaResponse, HealthResponse
 from app import __version__
 from app.config import configure_langsmith
+from app.routers import auth_router
+from app.auth.dependencies import get_optional_user
 
 # Configure LangSmith observability on startup
 configure_langsmith()
@@ -28,6 +31,9 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc"
 )
+
+# Include routers
+app.include_router(auth_router)
 
 # Configure CORS
 app.add_middleware(
@@ -93,7 +99,10 @@ async def get_form_schema(form_name: str):
 
 
 @app.post("/api/v1/chat", response_model=ChatResponse)
-async def chat(request: ChatRequest):
+async def chat(
+    request: ChatRequest,
+    current_user: Optional[dict] = Depends(get_optional_user)
+):
     """Process a chat message and return agent response.
     
     This endpoint:
@@ -102,14 +111,25 @@ async def chat(request: ChatRequest):
     3. Saves chat history and form submissions to Supabase
     4. Returns updated form data and highlighted fields
     5. Maintains conversation context via session_id
+    6. Optionally authenticates user via JWT token
     
     Args:
         request: ChatRequest containing message, session_id, and form_data
+        current_user: Optional authenticated user from JWT token
         
     Returns:
         ChatResponse with agent's response, updated form_data, and metadata
     """
     try:
+        # Extract user_id from auth token if available
+        user_id = current_user["user_id"] if current_user else None
+        
+        # Log authentication status
+        if user_id:
+            print(f"✓ Authenticated user: {user_id} ({current_user.get('username')})")
+        else:
+            print("⚠ Anonymous user (no authentication)")
+        
         # Import agent and clients
         from app.agent.SiriAgent import SiriAgent
         from app.llm import get_llm_client, get_supabase_client
@@ -132,11 +152,15 @@ async def chat(request: ChatRequest):
         
         # Save user message to chat history
         if supabase_service:
-            supabase_service.save_message(
-                session_id=request.session_id,
-                role="user",
-                content=request.message
-            )
+            message_data = {
+                "session_id": request.session_id,
+                "role": "user",
+                "content": request.message
+            }
+            # Add user_id if authenticated
+            if user_id:
+                message_data["user_id"] = user_id
+            supabase_service.save_message(**message_data)
         
         # Create SiriAgent instance
         agent = SiriAgent(
@@ -154,19 +178,28 @@ async def chat(request: ChatRequest):
         
         # Save assistant response to chat history
         if supabase_service:
-            supabase_service.save_message(
-                session_id=request.session_id,
-                role="assistant",
-                content=result["response"],
-                confidence=result.get("confidence"),
-                highlighted_fields=result.get("highlighted_fields")
-            )
+            assistant_data = {
+                "session_id": request.session_id,
+                "role": "assistant",
+                "content": result["response"],
+                "confidence": result.get("confidence"),
+                "highlighted_fields": result.get("highlighted_fields")
+            }
+            # Add user_id if authenticated
+            if user_id:
+                assistant_data["user_id"] = user_id
+            supabase_service.save_message(**assistant_data)
             
             # Update or create form submission
-            submission = supabase_service.get_or_create_submission(
-                session_id=request.session_id,
-                form_type="equipment_form"
-            )
+            submission_data = {
+                "session_id": request.session_id,
+                "form_type": "equipment_form"
+            }
+            # Add user_id if authenticated
+            if user_id:
+                submission_data["user_id"] = user_id
+                
+            submission = supabase_service.get_or_create_submission(**submission_data)
             
             if submission:
                 supabase_service.update_submission(

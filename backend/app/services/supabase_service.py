@@ -195,7 +195,8 @@ class SupabaseService:
     def get_or_create_submission(
         self,
         session_id: str,
-        form_type: str = "equipment_form"
+        form_type: str = "equipment_form",
+        user_id: Optional[str] = None
     ) -> Optional[Dict[str, Any]]:
         """
         Get the latest draft submission for a session, or create new if none exists.
@@ -205,6 +206,7 @@ class SupabaseService:
         Args:
             session_id: Session identifier
             form_type: Form type to look for
+            user_id: Optional user ID for authenticated users
             
         Returns:
             Submission dict (existing or new)
@@ -222,11 +224,15 @@ class SupabaseService:
         
         # Create new submission
         logger.info("No draft found, creating new submission")
-        return self.create_submission(
-            session_id=session_id,
-            form_type=form_type,
-            status="draft"
-        )
+        create_data = {
+            "session_id": session_id,
+            "form_type": form_type,
+            "status": "draft"
+        }
+        if user_id:
+            create_data["user_id"] = user_id
+            
+        return self.create_submission(**create_data)
     
     # ==================== Chat History ====================
     
@@ -237,7 +243,8 @@ class SupabaseService:
         content: str,
         submission_id: Optional[str] = None,
         confidence: Optional[float] = None,
-        highlighted_fields: Optional[List[str]] = None
+        highlighted_fields: Optional[List[str]] = None,
+        user_id: Optional[str] = None
     ) -> bool:
         """
         Save a chat message to history.
@@ -249,6 +256,7 @@ class SupabaseService:
             submission_id: Related submission UUID
             confidence: AI confidence score
             highlighted_fields: List of updated field names
+            user_id: User ID for authenticated users
             
         Returns:
             True if saved successfully
@@ -260,6 +268,8 @@ class SupabaseService:
                 "content": content,
             }
             
+            if user_id:
+                data["user_id"] = user_id
             if submission_id:
                 data["submission_id"] = submission_id
             if confidence is not None:
