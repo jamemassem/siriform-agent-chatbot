@@ -147,11 +147,20 @@ async def chat(request: ChatRequest):
         )
         
         # Process the message
+        print(f"🔍 Processing message: {request.message[:50]}...")
+        print(f"🔍 Session ID: {request.session_id}")
+        print(f"🔍 Current form data: {request.form_data}")
+        
         result = await agent.process_message(
             user_message=request.message,
             session_id=request.session_id,
             current_form_data=request.form_data
         )
+        
+        print(f"✅ Agent result: response={result.get('response', '')[:50]}...")
+        print(f"✅ Confidence: {result.get('confidence')}")
+        print(f"✅ Form data: {result.get('form_data')}")
+        print(f"✅ Highlighted fields: {result.get('highlighted_fields')}")
         
         # Save assistant response to chat history
         if supabase_service:

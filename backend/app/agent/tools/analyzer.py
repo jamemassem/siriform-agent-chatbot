@@ -85,12 +85,16 @@ If information is not mentioned, set the field to null."""),
     chain = prompt | llm_client | parser
     
     try:
+        print(f"🤖 Analyzer: Calling LLM with message: {user_message[:50]}...")
+        
         # Invoke LLM to extract data
         result = await chain.ainvoke({
             "user_message": user_message,
             "today": today,
             "format_instructions": parser.get_format_instructions()
         })
+        
+        print(f"🤖 Analyzer: LLM returned: {result}")
         
         # Convert Pydantic models to dicts
         extracted_data = {}
