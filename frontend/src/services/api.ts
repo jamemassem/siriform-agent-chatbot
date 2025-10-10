@@ -70,21 +70,13 @@ export async function getFormSchema(formName: string): Promise<FormSchemaRespons
  * Send chat message and get agent response
  */
 export async function sendChatMessage(
-  request: ChatRequest,
-  authToken?: string | null
+  request: ChatRequest
 ): Promise<ChatResponse> {
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-  };
-
-  // Add authentication token if available
-  if (authToken) {
-    headers['Authorization'] = `Bearer ${authToken}`;
-  }
-
   const response = await fetch(`${API_BASE_URL}/api/v1/chat`, {
     method: 'POST',
-    headers,
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(request),
   });
 
