@@ -1,28 +1,48 @@
-"""Natural language request analyzer tool."""
+"""Natural language request analyzer tool using LLM."""
 from typing import Any, Dict, List, Optional
 import re
 from datetime import datetime
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import JsonOutputParser
+from pydantic import BaseModel, Field
+
+
+class EquipmentItem(BaseModel):
+    """Equipment item extracted from user message."""
+    type: str = Field(description="Type of equipment (Notebook, Desktop, Monitor, etc.)")
+    quantity: int = Field(description="Quantity requested")
+    detail: str = Field(default="", description="Additional details or specifications")
+
+
+class ExtractedFormData(BaseModel):
+    """Structured data extracted from user's natural language request."""
+    equipments: Optional[List[EquipmentItem]] = Field(default=None, description="List of equipment items requested")
+    requestDate: Optional[str] = Field(default=None, description="Requested date in YYYY-MM-DD format")
+    requestTime: Optional[str] = Field(default=None, description="Requested time in HH:MM format")
+    deliveryLocation: Optional[str] = Field(default=None, description="Delivery location or building")
+    fullName: Optional[str] = Field(default=None, description="User's full name if mentioned")
+    department: Optional[str] = Field(default=None, description="Department name if mentioned")
+    purpose: Optional[str] = Field(default=None, description="Purpose or reason for request")
 
 
 async def analyze_user_request(
     user_message: str,
     form_schema: Dict[str, Any],
-    llm_client: Optional[Any] = None
+    llm_client: Any
 ) -> Dict[str, Any]:
     """
-    Analyze user's natural language request and extract structured information.
+    Analyze user's natural language request using LLM to extract structured information.
     
-    This function uses pattern matching and optional LLM analysis to extract:
-    - Quantities (e.g., "2 laptops")
-    - Dates and times (e.g., "tomorrow", "next Monday")
-    - Locations (e.g., "Building A", "ตึกศรีจันทร์")
-    - Equipment types
+    This function uses LangChain + OpenRouter LLM to extract:
+    - Equipment requests with quantities
+    - Dates and times
+    - Locations
     - Other form-relevant data
     
     Args:
-        user_message: User's natural language input
+        user_message: User's natural language input (Thai or English)
         form_schema: JSON Schema of the form to extract data for
-        llm_client: Optional LLM client for advanced analysis
+        llm_client: LangChain LLM client (REQUIRED - will use OpenRouter)
         
     Returns:
         Dictionary containing:
@@ -30,6 +50,98 @@ async def analyze_user_request(
         - confidence: Float between 0.0 and 1.0
         - ambiguities: List of fields that need clarification
     """
+    if not llm_client:
+        raise ValueError("llm_client is required for LLM-based analysis")
+    
+    # Create structured output parser
+    parser = JsonOutputParser(pydantic_object=ExtractedFormData)
+    
+    # Create extraction prompt
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", """You are an expert at extracting structured information from natural language requests in Thai and English.
+
+Extract the following information from the user's message:
+- Equipment requests (type, quantity, details)
+- Date (convert relative dates like 'พรุ่งนี้'/'tomorrow' to YYYY-MM-DD)
+- Time (convert 'เช้า'/'morning' to HH:MM format, e.g., 09:00)
+- Location (building, room, department)
+- User's name if mentioned
+- Department if mentioned
+- Purpose if mentioned
+
+Today's date is: {today}
+
+Return ONLY valid JSON matching this format:
+{format_instructions}
+
+If information is not mentioned, set the field to null."""),
+        ("user", "{user_message}")
+    ])
+    
+    # Get today's date for relative date conversion
+    today = datetime.now().strftime('%Y-%m-%d')
+    
+    # Create chain
+    chain = prompt | llm_client | parser
+    
+    try:
+        # Invoke LLM to extract data
+        result = await chain.ainvoke({
+            "user_message": user_message,
+            "today": today,
+            "format_instructions": parser.get_format_instructions()
+        })
+        
+        # Convert Pydantic models to dicts
+        extracted_data = {}
+        if result.get("equipments"):
+            extracted_data["equipments"] = [
+                {
+                    "type": eq.type if isinstance(eq, EquipmentItem) else eq.get("type"),
+                    "quantity": eq.quantity if isinstance(eq, EquipmentItem) else eq.get("quantity"),
+                    "detail": eq.detail if isinstance(eq, EquipmentItem) else eq.get("detail", "")
+                }
+                for eq in result["equipments"]
+            ]
+        
+        # Copy other fields if present
+        for field in ["requestDate", "requestTime", "deliveryLocation", "fullName", "department", "purpose"]:
+            if result.get(field):
+                extracted_data[field] = result[field]
+        
+        # Determine ambiguities (fields that are null or missing)
+        ambiguities = []
+        required_fields = ["equipments", "requestDate", "requestTime", "deliveryLocation"]
+        for field in required_fields:
+            if field not in extracted_data or not extracted_data[field]:
+                ambiguities.append(field)
+        
+        # Calculate confidence based on completeness
+        filled_fields = len([f for f in required_fields if f in extracted_data and extracted_data[f]])
+        confidence = filled_fields / len(required_fields)
+        
+        return {
+            "extracted_data": extracted_data,
+            "confidence": round(confidence, 2),
+            "ambiguities": ambiguities
+        }
+        
+    except Exception as e:
+        print(f"❌ LLM extraction failed: {e}")
+        # Fallback to empty extraction with low confidence
+        return {
+            "extracted_data": {},
+            "confidence": 0.0,
+            "ambiguities": ["equipments", "requestDate", "requestTime", "deliveryLocation"]
+        }
+
+
+# Keep old regex-based function as fallback
+async def analyze_user_request_regex(
+    user_message: str,
+    form_schema: Dict[str, Any]
+) -> Dict[str, Any]:
+    """Fallback regex-based analyzer (not used if LLM is available)."""
     extracted_data = {}
     ambiguities = []
     confidence_scores = []
